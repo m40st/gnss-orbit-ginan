@@ -29,14 +29,14 @@ IGS の合成暦は QZSS を含まないため、QZSS の基準としては使�
 7	結果を解釈する。
 8	記事② パラメータの影響を記事にする。
 
-###### 評価指標
+評価指標
 ・基準値との差を3DRMSの値で確認。
 ・基準暦同士の差
 
-####### 注意
+注意
 JGX のデータをコマンドラインで取得する場合はトークンが必要。トークンはリポジトリに含めず、環境変数や .env で管理し、.gitignore で除外する。
 
-######## 参考
+参考
 Ginan: https://github.com/GeoscienceAustralia/ginan
 Ginan ドキュメント: https://geoscienceaustralia.github.io/ginan/
 JGX: https://jgxnet.gsi.go.jp/ja/top/
