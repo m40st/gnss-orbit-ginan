@@ -13,12 +13,14 @@ Geoscience Australia のオープンソースGNSS解析ツールGinanを用い�
 
 
 ### 基準暦
-主基準　JGX MGN FINAL　─QZSSを含む。当面は試験提供のため取得日を記録。
+主基準　JGX MGN FINAL　 ─QZSSを含む。当面は試験提供のため取得日を記録。
 
-副基準　MGEX(COD) 　─QZSSの収録は取得時に確認。
+副基準　MGEX(COD) 　    ─QZSSの収録は取得時に確認。
 
 JGX の OPS プロダクト（IGS に提出している公式プロダクトと同一）は GPS・GLONASS・Galileo のみで、QZSS は含まれない。
+
 IGS の合成暦は QZSS を含まないため、QZSS の基準としては使わない。
+
 確認済み：JGX0MGNFIN_20262830000_01D_05M_ORB.SP3.gz（2026年第283日）に QZSS の衛星 J02・J03・J04・J07 が含まれる。
 
 
