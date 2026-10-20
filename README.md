@@ -1,4 +1,4 @@
-# QZSS-orbit-ginan
+# QZSS-orbit-Ginan
 Geoscience Australia のオープンソースGNSS解析ツールGinanを用いて準天頂衛星システム(QZSS/みちびき)の軌道を推定し、MGEXproduct(CODE)および JGX MGN productの精密暦と比較・評価する。
 
 
