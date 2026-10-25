@@ -1,0 +1,19 @@
+# 大きなデータ（再配布の条件を確認していないものを含む）
+*.gz
+*.SP3
+*.sp3
+*.ERP
+*.erp
+*.tar.gz
+products/
+outputs/
+outputs_*/
+
+# 秘密情報（トークンなど）
+.env
+*.token
+
+# ログ・一時ファイル
+*.log
+*.TRACE
+__pycache__/
