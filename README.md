@@ -1,6 +1,6 @@
 # gnss-orbit-ginan
 
-Ginan（Geoscience Australia製のオープンソースGNSS解析ツール）で、GNSS衛星の軌道を精密暦（SP3）に当てはめ、力学モデルの設定（極潮汐など）が精度に与える影響を調べる実験記録。準天頂衛星QZSS/みちびきの処理は調査中。
+Ginan（Geoscience Australia製のオープンソースGNSS解析ツール）で、GNSS衛星の軌道を精密暦（SP3）に当てはめ、力学モデルの設定が精度に与える影響を調べる実験記録。準天頂衛星QZSS/みちびきの処理は調査中。
 
 ## 目的
 
