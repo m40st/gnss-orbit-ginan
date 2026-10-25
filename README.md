@@ -1,80 +1,131 @@
-# QZSS-orbit-Ginan
-Geoscience Australia のオープンソースGNSS解析ツールGinanを用いて準天頂衛星システム(QZSS/みちびき)の軌道を推定し、MGEXproduct(CODE)および JGX MGN productの精密暦と比較・評価する。
-
-
+## gnss-orbit-ginan
+Ginan（Geoscience Australia製のオープンソースGNSS解析ツール）で、GNSS衛星の軌道を精密暦（SP3）に当てはめ、力学モデルの設定（極潮汐など）が精度に与える影響を調べる実験記録。準天頂衛星（QZSS/みちびき）の処理は調査中。
 
 ## 目的
-・GinanによるQZSS軌道推定を再現し、精度を定量的に評価する。
+・Ginanで精密暦（SP3）への軌道の当てはめを行い、精度を定量的に評価する。QZSSへの適用を目指す。
 
-・パラメータが軌道推定に与える影響を仮説をもとに検証する。
+・パラメータが軌道の当てはめに与える影響を仮説をもとに検証する。
 
 ・手順・設定・結果を再現可能な形で公開し、日本語の記事としてまとめる。
 
 
 
-### 基準暦
-主基準　JGX MGN FINAL　 ─QZSSを含む。当面は試験提供のため取得日を記録。
+## 基準暦
 
-副基準　MGEX(COD) 　    ─QZSSの収録は取得時に確認。
+### これまでの実験で使った基準
 
-JGX の OPS プロダクト（IGS に提出している公式プロダクトと同一）は GPS・GLONASS・Galileo のみで、QZSS は含まれない。
+IGS REPRO3 最終暦（IGS2R03FIN、GPS、2019年7月17〜19日）を使用した。Ginan付属のサンプル設定（`fit_sp3_pseudoobs.yaml`）が、この暦への3日間の当てはめを例にしているため（出典 [7]）。
 
-IGS の合成暦は QZSS を含まないため、QZSS の基準としては使わない。
+### QZSSで使う基準（計画）
 
-確認済み：JGX0MGNFIN_20262830000_01D_05M_ORB.SP3.gz（2026年第283日）に QZSS の衛星 J02・J03・J04・J07 が含まれる。
+| プロダクト | QZSS | 位置づけ |
+|---|---|---|
+| JGX MGN Final | 含む | 主基準。当面は試験提供のため、取得日を記録する |
+| JGX OPS | 含まない | QZSSの基準には使わない |
+| 他のMGEX解析センターの暦（CODEなど） | 取得時に確認 | 副基準の候補（未使用） |
 
+### 確認した事実
 
+- JGXは、国土地理院（GSI）とJAXAが共同で運営するIGS解析センターで、2023年12月から運用されている [1][2]。
+- JGXには2種類のプロダクトがある。OPSはGPS・GLONASS・Galileoを対象とし、IGSに提出している公式プロダクトと同一。MGNはQZSSを含むMulti-GNSSプロダクトで、当面は試験提供とされている [3]。
+- JGXの解析にはJAXAのMADOCAが使われている。QZSSとBeiDouを含むFinal暦は、JAXAがMGEXに提供しているとされている [4]。
+- QZSSの精密暦をIGSの公式プロダクトにすることは、JGXチームの今後の優先課題とされている [5]。そのため、IGSの合成暦にはQZSSが含まれないと理解している（IGSのプロダクト一覧では未確認）。
+- 自分で確認：`JGX0MGNFIN_20262830000_01D_05M_ORB.SP3.gz`（2026年第283日）に、QZSSの J02・J03・J04・J07 が含まれる。第281・282日も同様。取得日は、第283日が2026年10月20日、第281・282日が10月22日。
 
-#### 現状
+### 基準の不確かさ
+
+基準暦そのものにも誤差がある。文献では、MGEXの解析センター間のQZSS（傾斜軌道）の軌道の一致は、3Dで11〜16 cm程度とされている [6]。この値より小さい差は、基準の不確かさと区別できない可能性がある。
+
+### 未評価の点
+
+- JGX MGNの座標系はIGS20系（SP3のヘッダーに `IGc20` と表記）で、Ginanの出力は `igb14` 表記。この差が評価に与える影響は未評価。
+
+### 出典
+
+1. JGX Product Performance（IGS Workshop 2026ポスター）: https://files.igs.org/pub/resource/pubs/workshop/2026/IGS2026_Sy_P101_Miyahara.pdf
+2. 国土地理院・JAXA「国内初！衛星測位分野の国際事業に…参画」（2023年6月30日）: https://www.gsi.go.jp/denshi/denshi65010.html
+3. 国土地理院「GNSS精密暦提供サービス」ページ: https://jgxnet.gsi.go.jp/ja/top/
+4. Overview of MADOCA（IGS Workshop 2026ポスター）: https://files.igs.org/pub/resource/pubs/workshop/2026/IGS2026_Sy_P104_Imada.pdf
+5. JPGU 2026 U06-05「Japanese Precise Orbit Determination for GNSS satellites…」: https://pub.confit.atlas.jp/ja/event/jpgu2026/presentation/U06-05
+6. Precise Orbit and Clock Products of Galileo, BDS and QZSS from MGEX Since 2018, Remote Sensing 12(9), 2020: https://doi.org/10.3390/rs12091415
+7. Ginan（Geoscience Australia）: https://github.com/GeoscienceAustralia/ginan
+
+## 現状
 ・環境:Ginan v4.1.2(Docker)
 
 ・QZSS対応：GinanのREADMEでは「Development ongoing」と記載。対応範囲は検証で確認。
 
-・進捗：極潮汐の実験の完了。QZSSの処理状況（調査中）
+・進捗：極潮汐の実験の完了。QZSSは内部では処理されているが（orbit_ics、TRACEに記録）、SP3に出力されない。原因は調査中。
 
 
 
-##### ロードマップ
+## ロードマップ
 
-1	基準暦の確定、Ginan 動作確認、データ取得	
-
-2	1日分（2026年第283日）の軌道推定と基準暦との比較をスクリプト/図化する
-
-3	評価指標の決定、1週間分への拡張
-
-
-4	記事① 再現手順を記事にする
-
-5–6	仮説を立ててパラメータ実験を行う。
-
-7	結果を解釈する。
-
-8	記事② パラメータの影響を記事にする。
+| 段階 | 内容 | 状態 |
+|---|---|---|
+| 1 | 基準暦の確定、Ginanの動作確認、データ取得 | 完了 |
+| 2 | GPSの当てはめと評価（極潮汐の実験） | 完了 |
+| 3 | QZSSがSP3に出力されない原因の調査（Ginanへの質問を含む） | 進行中 |
+| 4 | 重力場の次数（`egm_degree`）の実験（GPS） | 未着手 |
+| 5 | 記事① 再現手順 | 未着手 |
+| 6 | QZSSでのパラメータ実験（3が解決した場合） | 未定 |
+| 7 | 記事② パラメータの影響 | 未着手 |
 
 
 
-**評価指標**
+##評価指標
 
-・基準値との差を3DRMSの値で確認。
+・基準暦との差を3D RMSの値で確認。
 
-・基準暦同士の差
 
-**仮説**
+##仮説
 
-・衛星ジオポテンシャルオプションのうち極潮汐をオフにした場合、長期にわたり誤差が生まれる。
+・衛星ジオポテンシャルオプションのうち極潮汐をオフにした場合、長期にわたりゆらぎが生まれる。
 
-**注意**
+## 結果（GPS、2019年7月17〜19日、IGS最終暦への当てはめ）
+
+| 条件 | 17日 | 18日 | 19日 |
+|---|---|---|---|
+| 基準（極潮汐あり） | 0.007 m | 0.030 m | 0.078 m |
+| 極潮汐なし | 0.007 m | 0.030 m | 0.078 m |
+| 2つの推定軌道の差 | 0.001 m | 0.002 m | 未確認 |
+
+仮説：極潮汐をオフにすると、基準暦との当てはめ誤差が増える。
+結果：軌道は1〜2 mm動くが、当てはめ誤差には現れなかった（3日間）。
+
+##注意
 
 JGX のデータをコマンドラインで取得する場合はトークンが必要。トークンはリポジトリに含めず、環境変数や .env で管理し、.gitignore で除外する。
 
 
+## 概要と方式
 
-**参考**
+Ginanの付属設定（`fit_sp3_pseudoobs.yaml`）を使い、精密暦（SP3）を擬似観測として、力学モデルで軌道を当てはめる。観測データ（RINEX）から軌道を推定する方式ではない。
 
-Ginan: https://github.com/GeoscienceAustralia/ginan
+## 結果（GPS、2019年7月17〜19日、IGS最終暦への当てはめ）
 
-Ginan ドキュメント: https://geoscienceaustralia.github.io/ginan/
+| 条件 | 17日 | 18日 | 19日 |
+|---|---|---|---|
+| 基準（極潮汐あり） | 0.007 m | 0.030 m | 0.078 m |
+| 極潮汐なし | 0.007 m | 0.030 m | 0.078 m |
+| 2つの推定軌道の差 | 0.001 m | 0.002 m | 未確認 |
 
-JGX: https://jgxnet.gsi.go.jp/ja/top/
+数値は、推定SP3と基準SP3の位置差の3D RMS。詳細は [docs/experiment_log.md](docs/experiment_log.md)。
 
+## ディレクトリ構成
+
+- `scripts/`：SP3の確認・比較、Ginanの入力ファイルの取得、診断用のスクリプト
+- `configs/`：Ginanの設定ファイル（付属の設定をコピーして変更したもの）
+- `docs/`：実験ログ
+
+## データの扱い
+
+- 精密暦（SP3）や、Ginanの入力データは、このリポジトリに含めない。各提供元の利用条件に従って、取得する。
+- JGXのデータを、コマンドラインで取得する場合はトークンが必要。トークンは、リポジトリに含めない。
+
+## 出典・ライセンス
+
+- JGX（国土地理院・JAXA）：JGX MGN 最終暦（DOI: https://doi.org/10.57499/GSI_GNSS_2025_006）を入力として使用した。本リポジトリの結果は、これを筆者が加工して作成したもので、国土地理院・JAXAが作成したものではない。出典：国土地理院ウェブサイト https://www.gsi.go.jp/denshi/GSI_GNSS_2025_006.html
+- Ginan：Geoscience Australia、Apache License 2.0。`configs/` の設定は、Ginan付属の設定を元に、一部を変更したもの。
+- 本リポジトリのスクリプトのライセンス：未定（決まったら記載する）。
 
