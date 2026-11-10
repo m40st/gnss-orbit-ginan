@@ -2,6 +2,16 @@
 
 Ginan（Geoscience Australia製のオープンソースGNSS解析ツール）で、GNSS衛星の軌道を精密暦（SP3）に当てはめ、力学モデルの設定が精度に与える影響を調べる実験記録。準天頂衛星QZSS/みちびきの処理は調査中。
 
+## Summary (English)
+
+This repository documents experiments in fitting GNSS satellite orbits to precise ephemerides (SP3) with [Ginan](https://github.com/GeoscienceAustralia/ginan) (Geoscience Australia; v4.1.2, Docker), and in testing how dynamic-model options affect the fit. QZSS (Michibiki) processing is still under investigation.
+
+- **Method:** Ginan's example configuration `fit_sp3_pseudoobs.yaml` is used. SP3 positions are treated as pseudo-observations and a dynamic orbit model is fitted over three days. This is not orbit estimation from raw observations (RINEX).
+- **Result so far (GPS, 2019-07-17 to 19, fitted to the IGS REPRO3 final orbits):** Switching off the ocean and solid pole tides moved the fitted orbits by only 1-2 mm and did not change the 3D RMS against IGS at the reported precision (0.007 m, 0.030 m and 0.078 m on the three days). Only three days were tested, so long-term effects are not assessed.
+- **QZSS (JGX MGN final orbits, 2026-10-08 to 10):** Ginan appears to estimate J02, J03, J04 and J07 internally (they are recorded in `orbit_ics` and the TRACE files), but they are not written to the SP3 output. Replacing the 2019 broadcast navigation file with 2026 files did not change this. The cause is unknown. A question has been posted to the Ginan Discussions: (URL).
+- **Data:** Input data (SP3 files etc.) are not included in this repository; please obtain them from the providers under their terms. The JGX products come from the GNSS precise ephemeris service of GSI (Geospatial Information Authority of Japan) and JAXA (https://jgxnet.gsi.go.jp/ja/top/). The results here are my own processing and were not produced by GSI or JAXA.
+- **Details:** See [docs/experiment_log.md](docs/experiment_log.md) (in Japanese) and the sections below (in Japanese).
+
 ## 目的
 
 - Ginanで精密暦（SP3）への軌道の当てはめを行い、精度を定量的に評価する。QZSSへの適用を目指す。
