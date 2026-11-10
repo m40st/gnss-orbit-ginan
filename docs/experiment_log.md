@@ -79,8 +79,8 @@ JGX MGN の最終暦 3日分（2026年10月8〜10日）を入力にして実行�
 
 Ginan への質問：
 
-- 投稿日：（記入）
-- URL：（記入）
+- 投稿日：2026年11月10日
+- URL：https://github.com/GeoscienceAustralia/ginan/discussions/209
 
 ## 使用したデータと取得日
 
