@@ -108,6 +108,5 @@ Ginan への質問：
 
 ## 次にやること
 
-- Ginan の GitHub Discussions で、QZSS が SP3 に出力されない件を質問する（投稿したら、上の欄に記入）
 - GPS で `egm_degree`（重力場の次数）を変える実験を行う
 - JGX の SP3 を当てはめた GPS の結果（`fit_jgxgps`）と、JGX との差を比べる（未実施）
