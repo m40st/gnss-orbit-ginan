@@ -8,6 +8,7 @@ This repository documents experiments in fitting GNSS satellite orbits to precis
 
 - **Method:** Ginan's example configuration `fit_sp3_pseudoobs.yaml` is used. SP3 positions are treated as pseudo-observations and a dynamic orbit model is fitted over three days. This is not orbit estimation from raw observations (RINEX).
 - **Result so far (GPS, 2019-07-17 to 19, fitted to the IGS REPRO3 final orbits):** Switching off the ocean and solid pole tides moved the fitted orbits by only 1-2 mm and did not change the 3D RMS against IGS at the reported precision (0.007 m, 0.030 m and 0.078 m on the three days). Only three days were tested, so long-term effects are not assessed.
+- **Gravity-field degree (GPS, same data):** Lowering `egm_degree` from 15 to 8 or 12 changed the fitted orbits by less than 1 mm and left the 3D RMS against IGS unchanged (6.85 / 29.9 / 77.7 mm on the three days). At degree 4 the fit error grew about 3.5-13 times (86 / 308 / 273 mm) and the orbits differed from the degree-15 solution by 86-308 mm. With degree 2, `pea` aborted (`munmap_chunk(): invalid pointer`); the cause is unknown. Degrees 5-7 were not tested, and the SP3 resolution is 1 mm.
 - **QZSS (JGX MGN final orbits, 2026-10-08 to 10):** Ginan appears to estimate J02, J03, J04 and J07 internally (they are recorded in `orbit_ics` and the TRACE files), but they are not written to the SP3 output. Replacing the 2019 broadcast navigation file with 2026 files did not change this. The cause is unknown. A question has been posted to the Ginan Discussions: (https://github.com/GeoscienceAustralia/ginan/discussions/209).
 - **Data:** Input data (SP3 files etc.) are not included in this repository; please obtain them from the providers under their terms. The JGX products come from the GNSS precise ephemeris service of GSI (Geospatial Information Authority of Japan) and JAXA (https://jgxnet.gsi.go.jp/ja/top/). The results here are my own processing and were not produced by GSI or JAXA.
 - **Details:** See [docs/experiment_log.md](docs/experiment_log.md) (in Japanese) and the sections below (in Japanese).
@@ -37,6 +38,25 @@ Ginanの付属設定（`fit_sp3_pseudoobs.yaml`）を使い、精密暦（SP3）
 - 仮説：衛星の力モデルのうち、極潮汐を考慮しないと、基準暦との当てはめ誤差が増える。期間が長くなるほど差が広がる。
 - 結果：軌道は1〜2 mm動くが、当てはめ誤差には現れなかった（3日間）。3日間の実験なので、長期の影響は検証できていない。
 - 注意：この設定は経験的パラメータを有効にしており、小さな力モデルの違いを吸収している可能性がある（仮説・未検証）。
+
+
+### 重力場の次数 `egm_degree`（GPS、同じ入力）
+
+IGS最終暦との3D RMS [mm]（当てはめ誤差）
+
+| 次数 | 17日 | 18日 | 19日 |
+|---|---|---|---|
+| 2 | 実行できず（`pea` が異常終了） | ― | ― |
+| 4 | 86.46 | 307.99 | 272.61 |
+| 8 | 6.85 | 29.86 | 77.67 |
+| 12 | 6.85 | 29.89 | 77.67 |
+| 15（基準） | 6.85 | 29.89 | 77.67 |
+
+- 次数8以上では、次数15との軌道の差は 1 mm 未満で、当てはめ誤差も変わらなかった。
+- 次数4では、当てはめ誤差が約3.5〜13倍になり、次数15との軌道の差は 86〜308 mm だった。
+- 次数2は、`pea` が2エポック目の軌道の伝搬で異常終了した。原因は未確認。
+- 未確認：次数5〜7のどこで誤差が下がりきるか。SP3は1 mm単位なので、1 mm未満の差は大きさを断定できない。QZSSで同じかも未確認。
+- 次数15と各次数の軌道の差など、詳細は [docs/experiment_log.md](docs/experiment_log.md)。
 
 ## 基準暦
 
@@ -83,7 +103,7 @@ IGS REPRO3 最終暦（IGS2R03FIN、GPS、2019年7月17〜19日）を使用し�
 
 - 環境：Ginan v4.1.2（Docker）
 - QZSS対応：GinanのREADMEでは「Development ongoing」と記載。対応範囲は検証で確認する。
-- 進捗：極潮汐の実験（GPS）は完了。JGX MGN最終暦（2026年10月8〜10日）を入力にした実行も行ったが、JGXとの差の評価は未実施。QZSSは内部では処理されているが（`orbit_ics`、TRACEに記録）、SP3に出力されない。原因は調査中。
+- 進捗：極潮汐の実験（GPS）は完了。JGX MGN最終暦（2026年10月8〜10日）を入力にした実行も行ったが、JGXとの差の評価は未実施。QZSSは内部では処理されているが（`orbit_ics`、TRACEに記録）、SP3に出力されない。原因は調査中で、Ginanに質問済み（[Discussions #209](https://github.com/GeoscienceAustralia/ginan/discussions/209)）。
 
 ## ロードマップ
 
@@ -91,15 +111,15 @@ IGS REPRO3 最終暦（IGS2R03FIN、GPS、2019年7月17〜19日）を使用し�
 |---|---|---|
 | 1 | 基準暦の確定、Ginanの動作確認、データ取得 | 完了 |
 | 2 | GPSの当てはめと評価（極潮汐の実験） | 完了 |
-| 3 | QZSSがSP3に出力されない原因の調査（Ginanへの質問を含む） | 進行中 |
-| 4 | 重力場の次数（`egm_degree`）の実験（GPS） | 未着手 |
+| 3 | QZSSがSP3に出力されない原因の調査（Ginanへ質問済み：#209、返事待ち） | 進行中 |
+| 4 | 重力場の次数（`egm_degree`）の実験（GPS）。次数5~7は未実施 | 完了 |
 | 5 | 記事① 再現手順 | 未着手 |
 | 6 | QZSSでのパラメータ実験（3が解決した場合） | 未定 |
 | 7 | 記事② パラメータの影響 | 未着手 |
 
 ## ディレクトリ構成
 
-- `scripts/`：SP3の確認・比較、Ginanの入力ファイルの取得、診断用のスクリプト
+- `scripts/`：SP3の確認・比較、Ginanの入力ファイルの取得、診断用のスクリプト、次数の実験（`degree_sweep.sh`、`sweep_compare.py`）
 - `configs/`：Ginanの設定ファイル（付属の設定をコピーして変更したもの）
 - `docs/`：実験ログ
 
