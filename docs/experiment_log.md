@@ -8,7 +8,7 @@ Ginan v4.1.2（Docker）で、GNSS衛星の軌道を精密暦に当てはめる�
 - 設定：Ginan 付属の `fit_sp3_pseudoobs.yaml` をコピーして使用
 - 内容：精密暦（SP3）を擬似観測として、3日間の軌道を力学モデルで当てはめる（**観測データからの推定ではない**）
 - 評価：推定SP3と基準SP3の位置差の3D RMS（共通の衛星・時刻のみ）。`scripts/compare_sp3.py`
-- 注意：Ginan の既定の設定では SP3 が慣性系で出力される。`output_inertial: false` にして地球固定系で出力する
+- 注意：付属設定 fit_sp3_pseudoobs.yaml では SP3 が慣性系で出力される。`output_inertial: false` にして地球固定系で出力する
 
 ## 実験②：極潮汐の有無（GPS、2019年7月17〜19日）
 
