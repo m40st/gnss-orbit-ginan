@@ -9,7 +9,7 @@ This repository documents experiments in fitting GNSS satellite orbits to precis
 - **Method:** Ginan's example configuration `fit_sp3_pseudoobs.yaml` is used. SP3 positions are treated as pseudo-observations and a dynamic orbit model is fitted over three days. This is not orbit estimation from raw observations (RINEX).
 - **Result so far (GPS, 2019-07-17 to 19, fitted to the IGS REPRO3 final orbits):** Switching off the ocean and solid pole tides moved the fitted orbits by only 1-2 mm and did not change the 3D RMS against IGS at the reported precision (0.007 m, 0.030 m and 0.078 m on the three days). Only three days were tested, so long-term effects are not assessed.
 - **Gravity-field degree (GPS, same data):** Lowering `egm_degree` from 15 to 8 or 12 changed the fitted orbits by less than 1 mm and left the 3D RMS against IGS unchanged (6.85 / 29.9 / 77.7 mm on the three days). At degree 4 the fit error grew about 3.5-13 times (86 / 308 / 273 mm) and the orbits differed from the degree-15 solution by 86-308 mm. With degree 2, `pea` aborted (`munmap_chunk(): invalid pointer`); the cause is unknown. Degrees 5-7 were not tested, and the SP3 resolution is 1 mm.
-- **QZSS (JGX MGN final orbits, 2026-10-08 to 10):** Ginan appears to estimate J02, J03, J04 and J07 internally (they are recorded in `orbit_ics` and the TRACE files), but they are not written to the SP3 output. Replacing the 2019 broadcast navigation file with 2026 files did not change this. The cause is unknown. A question has been posted to the Ginan Discussions: (https://github.com/GeoscienceAustralia/ginan/discussions/209).
+- **QZSS (JGX MGN final orbits, 2026-10-08 to 10):** Ginan appears to estimate J02, J03, J04 and J07 internally (they are recorded in `orbit_ics` and the TRACE files), but they are not written to the SP3 output. Replacing the 2019 broadcast navigation file with 2026 files did not change this.According to a reply in the Ginan Discussions (https://github.com/GeoscienceAustralia/ginan/discussions/209), the cause is in Ginan's SP3 writer rather than in the configuration, and the maintainers have merged a fix internally for a future release. I have not yet confirmed the fix.
 - **Data:** Input data (SP3 files etc.) are not included in this repository; please obtain them from the providers under their terms. The JGX products come from the GNSS precise ephemeris service of GSI (Geospatial Information Authority of Japan) and JAXA (https://jgxnet.gsi.go.jp/ja/top/). The results here are my own processing and were not produced by GSI or JAXA.
 - **Details:** See [docs/experiment_log.md](docs/experiment_log.md) (in Japanese) and the sections below (in Japanese).
 
@@ -106,7 +106,7 @@ IGS REPRO3 最終暦（IGS2R03FIN、GPS、2019年7月17〜19日）を使用し�
 
 - 環境：Ginan v4.1.2（Docker）
 - QZSS対応：GinanのREADMEでは「Development ongoing」と記載。対応範囲は検証で確認する。
-- 進捗：極潮汐の実験（GPS）は完了。JGX MGN最終暦（2026年10月8〜10日）を入力にした実行も行ったが、JGXとの差の評価は未実施。QZSSは内部では処理されているが（`orbit_ics`、TRACEに記録）、SP3に出力されない。原因は調査中で、Ginanに質問済み（[Discussions #209](https://github.com/GeoscienceAustralia/ginan/discussions/209)）。
+- 進捗：極潮汐の実験（GPS）は完了。JGX MGN最終暦（2026年10月8〜10日）を入力にした実行も行ったが、JGXとの差の評価は未実施。QZSSは内部では処理されているが（`orbit_ics`、TRACEに記録）、SP3に出力されない。原因は、Ginan の SP3 書き出しの実装にあるとの返信があった（[Discussions #209](https://github.com/GeoscienceAustralia/ginan/discussions/209)）。修正は次のリリースで提供される予定で、修正版での確認は未実施。
 
 ## ロードマップ
 
@@ -114,7 +114,7 @@ IGS REPRO3 最終暦（IGS2R03FIN、GPS、2019年7月17〜19日）を使用し�
 |---|---|---|
 | 1 | 基準暦の確定、Ginanの動作確認、データ取得 | 完了 |
 | 2 | GPSの当てはめと評価（極潮汐の実験） | 完了 |
-| 3 | QZSSがSP3に出力されない原因の調査（Ginanへ質問済み：#209、返事待ち） | 進行中 |
+| 3 | QZSSがSP3に出力されない原因の調査（原因はGinan側の実装と判明。修正版のリリース待ち） | 修正版待ち |
 | 4 | 重力場の次数（`egm_degree`）の実験（GPS）。次数5～7は未実施 | 完了 |
 | 5 | 記事① 再現手順 | 未着手 |
 | 6 | QZSSでのパラメータ実験（3が解決した場合） | 未定 |
