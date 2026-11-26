@@ -155,5 +155,5 @@ Ginan への質問：
 - JGX の SP3 を当てはめた GPS の結果（`fit_jgxgps`）と、JGX との差を比べる
 
 ### 2026-11-26　記事①を公開
-- Zenn に「Ginanで GPS 衛星の軌道を精密暦に当てはめる：Docker での再現手順と、つまずいた点」を公開した：https://zenn.dev/sakanam40/articles/fb89ddb1ab415c
+- Zenn に「Ginanで GPS 衛星の軌道を精密暦に当てはめる：Docker での再現手順とつまずいた点」を公開した：https://zenn.dev/sakanam40/articles/fb89ddb1ab415c
 - 公開前に記事の記述を見直した。直した主な点：座標系の説明（「距離が同じ」は回転と矛盾しない、という書き方に）、誤差の増え方（日を追って大きくなる）、QZSS の原因（メンテナーの返信は「原因とみられる」）。
