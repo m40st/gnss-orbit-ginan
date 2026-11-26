@@ -13,6 +13,7 @@ This repository documents experiments in fitting GNSS satellite orbits to precis
 - **QZSS (JGX MGN final orbits, 2026-10-08 to 10):** Ginan appears to estimate J02, J03, J04 and J07 internally (they are recorded in `orbit_ics` and the TRACE files), but they are not written to the SP3 output. Replacing the 2019 broadcast navigation file with 2026 files did not change this. According to a reply in the Ginan Discussions (https://github.com/GeoscienceAustralia/ginan/discussions/209), the cause appears to be in Ginan's SP3 writer rather than in the configuration, and the maintainers have merged a fix internally for a future release. I have not yet confirmed the fix.
 
 - **Data:** Input data (SP3 files etc.) are not included in this repository; please obtain them from the providers under their terms. The JGX products come from the GNSS precise ephemeris service of GSI (Geospatial Information Authority of Japan) and JAXA (https://jgxnet.gsi.go.jp/ja/top/). The results here are my own processing and were not produced by GSI or JAXA.
+- **Article (Japanese):** [Ginanで GPS 衛星の軌道を精密暦に当てはめる：Docker での再現手順と、つまずいた点](https://zenn.dev/sakanam40/articles/fb89ddb1ab415c)
 - **Details:** See [docs/experiment_log.md](docs/experiment_log.md) (in Japanese) and the sections below (in Japanese).
 
 ## 目的
@@ -110,7 +111,7 @@ IGS REPRO3 最終暦（IGS2R03FIN、GPS、2019年7月17〜19日）を使用し�
 - QZSS対応：GinanのREADMEでは「Development ongoing」と記載。対応範囲は検証で確認する。
 
 - 進捗：極潮汐の実験（GPS）は完了。JGX MGN最終暦（2026年10月8〜10日）を入力にした実行も行ったが、JGXとの差の評価は未実施。QZSSは内部では処理されているが（`orbit_ics`、TRACEに記録）、SP3に出力されない。原因は、Ginan の SP3 書き出しの実装にあるとみられるとの返信があった（[Discussions #209](https://github.com/GeoscienceAustralia/ginan/discussions/209)）。修正は次のリリースで提供される予定で、修正版での確認は未実施。
-
+- 記事①を公開した（2026-11-26、[Zenn](https://zenn.dev/sakanam40/articles/fb89ddb1ab415c)）。
 
 ## ロードマップ
 
@@ -119,9 +120,8 @@ IGS REPRO3 最終暦（IGS2R03FIN、GPS、2019年7月17〜19日）を使用し�
 | 1 | 基準暦の確定、Ginanの動作確認、データ取得 | 完了 |
 | 2 | GPSの当てはめと評価（極潮汐の実験） | 完了 |
 | 3 | QZSSがSP3に出力されない原因の調査（Ginan側のSP3書き出しの実装が原因とみられ、修正版のリリース待ち） | 修正版待ち |
->
 | 4 | 重力場の次数（`egm_degree`）の実験（GPS）。次数5～7は未実施 | 完了 |
-| 5 | 記事① 再現手順 | 未着手 |
+| 5 | 記事①の公開（Zenn：Docker での再現手順と、つまずいた点） | 完了 |
 | 6 | QZSSでのパラメータ実験（3が解決した場合） | 未定 |
 | 7 | 記事② パラメータの影響 | 未着手 |
 
